@@ -26,10 +26,15 @@
 
 #include <QApplication>
 
+#include <cpptrace/cpptrace.hpp>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+
+    cpptrace::print_trace();
+
     w.show();
     return a.exec();
 }
