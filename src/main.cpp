@@ -1,83 +1,54 @@
 #include <exception>
-#include <vector>
-
-#include <QApplication>
-#include <QString>
-#include <QTextStream>
-#include <QMessageBox>
+#include <iostream>
 
 #include <cpptrace/cpptrace.hpp>
 
-#include "MainWindow.h"
-
 namespace
 {
-    inline constexpr unsigned n_digits(unsigned value) {
-        return value < 10 ? 1 : 1 + n_digits(value / 10);
+    void willThrow()
+    {
+        throw "My deliberate exception";
     }
 
-    QString formatTrace(const std::vector<cpptrace::stacktrace_frame> &trace) noexcept
+    void willBreakMyPromiseNotToThrow() noexcept
     {
-        QString stackTrace;
-        QTextStream out(&stackTrace, QIODeviceBase::WriteOnly);
-
-        std::size_t counter = 0;
-        if (!trace.empty()) {
-            out << "Stack trace (most recent call first):" << Qt::endl;
-            const auto frame_number_width = n_digits(static_cast<int>(trace.size()) - 1);
-            for(const auto &frame : trace) {
-                out << '#'
-                    << qSetFieldWidth(static_cast<int>(frame_number_width))
-                    << Qt::left
-                    << counter++
-                    << Qt::right
-                    << " "
-                    << Qt::hex
-                    << "0x"
-                    << qSetFieldWidth(2 * sizeof(uintptr_t))
-                    << qSetPadChar('0')
-                    << frame.address
-                    << qSetFieldWidth(0)
-                    << Qt::dec
-                    << qSetPadChar(' ')
-                    << " in "
-                    << QString::fromStdString(frame.symbol)
-                    << " at "
-                    << QString::fromStdString(frame.filename)
-                    << ":"
-                    << frame.line
-                    << (frame.col > 0 ? ":" + QString::number(frame.col) : "")
-                    << Qt::endl;
-            }
-
-        } else {
-            out << "No stack trace available." << Qt::endl;
-        }
-        return stackTrace;
+        throw "Breaking my promise";
     }
 
     void handleTerminate()
     {
+        std::cout << "Third trace (in termination handler):" << std::endl;
+        // BUG: This will cause a segmentation fault (on macOS) when run *outside* of a debugger
+        //      (regardless of whether compiled as debug or release)
+        //
+        //      When run *inside* a debugger then we get past this point (except that we won't
+        //      get neither source names nor line numbers - but frame addresses are properly
+        //      evaluated (as it seems)
         cpptrace::print_trace();
-        const auto trace = cpptrace::generate_trace();
-        const QString traceString = ::formatTrace(trace);
-        QMessageBox::critical(nullptr, "Termination", traceString);
         std::abort();
     }
 }
 
 int main(int argc, char *argv[])
 {
+    // Setup a terminate handler in order to catch exceptions that
+    // were unexpectedly - but in this example totally deliberately - thrown
+    // from functions declared as "noexcept"
     std::set_terminate(::handleTerminate);
 
-    QApplication a(argc, argv);
+    std::cout << "First trace:" << std::endl;
+    // This works
+    cpptrace::print_trace();
 
-    const auto trace = cpptrace::generate_trace();
-    const QString traceString = ::formatTrace(trace);
-    QMessageBox::critical(nullptr, "Termination", traceString);
+    try {
+        willThrow();
+    } catch (...) {
+        std::cout << "Second trace (in excepton handler):" << std::endl;
+        // This works as well
+        cpptrace::print_trace();
+    }
 
-    MainWindow w;
+    ::willBreakMyPromiseNotToThrow();
 
-    w.show();
-    return a.exec();
+    return 0;
 }
