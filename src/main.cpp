@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     cpptrace::print_trace();
 
     try {
-        willThrow();
+        ::willThrow();
     } catch (...) {
         std::cout << "Second trace (in excepton handler):" << std::endl;
         // This works as well
