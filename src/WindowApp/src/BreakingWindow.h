@@ -22,18 +22,34 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#include "MainWindow.h"
-#include "ui_MainWindow.h"
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-MainWindow::MainWindow(QWidget *parent) noexcept
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    throw "My example exception";
+#include <QMainWindow>
+
+namespace Ui {
+class BreakingWindow;
 }
 
-MainWindow::~MainWindow()
+/**
+ * Trying to instantiate this window will throw an exception.
+ */
+class BreakingWindow : public QMainWindow
 {
-    delete ui;
-}
+    Q_OBJECT
+
+public:
+    /**
+     * This ctor will break its promise not to throw.
+     *
+     * @param parent
+     *        the optional parent widget
+     */
+    explicit BreakingWindow(QWidget *parent = nullptr) noexcept;
+    ~BreakingWindow();
+
+private:
+    Ui::BreakingWindow *ui;
+};
+
+#endif // MAINWINDOW_H

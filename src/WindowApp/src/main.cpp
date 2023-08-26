@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 #include <StackTrace/StackTrace.h>
-#include "MainWindow.h"
+#include "BreakingWindow.h"
 
 namespace
 {
@@ -60,8 +60,9 @@ int main(int argc, char *argv[])
         // This works as well
         StackTrace::generate();
     }
-
-    MainWindow w;
+    
+    // Trying to instantiate this window will throw an exception (breaking its 'noexcept' promise)
+    BreakingWindow w;
 
     return 0;
 }

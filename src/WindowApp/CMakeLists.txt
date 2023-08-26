@@ -6,7 +6,7 @@ set(CMAKE_AUTORCC ON)
 qt_add_executable(CpptraceWindowTest
     MANUAL_FINALIZATION
     src/main.cpp
-    src/MainWindow.h src/MainWindow.cpp src/MainWindow.ui
+    src/BreakingWindow.h src/BreakingWindow.cpp src/BreakingWindow.ui
 )
 
 target_link_libraries(

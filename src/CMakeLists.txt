@@ -1,0 +1,10 @@
+add_subdirectory(StackTraceLib)
+add_subdirectory(ConsoleApp)
+
+find_package(Qt6 COMPONENTS Widgets)
+if (Qt6_FOUND)
+    message("Found Qt: ${QT}")
+    add_subdirectory(WindowApp)
+else()
+    message("Qt not found: skipping window test app.")
+endif()

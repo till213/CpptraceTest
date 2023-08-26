@@ -22,25 +22,20 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "BreakingWindow.h"
+#include "ui_BreakingWindow.h"
 
-#include <QMainWindow>
-
-namespace Ui {
-class MainWindow;
+BreakingWindow::BreakingWindow(QWidget *parent) noexcept
+    : QMainWindow(parent),
+      ui(new Ui::BreakingWindow)
+{
+    ui->setupUi(this);
+    // We deliberately break our promise not to throw any exceptions
+    // (this will call the registered std::terminate handler)
+    throw "My example exception";
 }
 
-class MainWindow : public QMainWindow
+BreakingWindow::~BreakingWindow()
 {
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr) noexcept;
-    ~MainWindow();
-
-private:
-    Ui::MainWindow *ui;
-};
-
-#endif // MAINWINDOW_H
+    delete ui;
+}
