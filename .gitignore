@@ -56,3 +56,6 @@ compile_commands.json
 # Visual Studio
 .vs
 out
+
+#Makefile
+build
