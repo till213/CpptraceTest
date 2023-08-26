@@ -32,7 +32,7 @@ namespace
         QMessageBox::information(
             nullptr,
             "Termination",
-            "If this message shows up then printing the stack trace from within this termination handler was successful."
+            "If this message shows up then generating the stack trace from within this terminate handler was successful."
         );
         // Instead of std::abort we call exit with some error code, as we have gracefully dealt
         // with the uncaught exception (abnormal termination)
