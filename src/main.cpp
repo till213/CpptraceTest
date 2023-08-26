@@ -25,7 +25,9 @@ namespace
         //      get neither source names nor line numbers - but frame addresses are properly
         //      evaluated (as it seems)
         cpptrace::print_trace();
-        std::abort();
+        // Instead of std::abort we call exit with some error code, as we have gracefully dealt
+        // with the uncaught exception (abnormal termination)
+        std::exit(-1);
     }
 }
 
