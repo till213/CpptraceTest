@@ -1,14 +1,19 @@
 # Application
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 qt_add_executable(CpptraceWindowTest
     MANUAL_FINALIZATION
     src/main.cpp
+    src/MainWindow.h src/MainWindow.cpp src/MainWindow.ui
 )
 
 target_link_libraries(
     CpptraceWindowTest
     PRIVATE
         Qt6::Widgets
-        cpptrace::cpptrace
+        StackTrace::StackTrace
 )
 set_target_properties(
     CpptraceWindowTest

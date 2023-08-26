@@ -4,7 +4,8 @@
 #include <QApplication>
 #include <QMessageBox>
 
-#include <cpptrace/cpptrace.hpp>
+#include <StackTrace/StackTrace.h>
+#include "MainWindow.h"
 
 namespace
 {
@@ -27,7 +28,7 @@ namespace
         //      When run *inside* a debugger then we get past this point (except that we won't
         //      get neither source names nor line numbers - but frame addresses are properly
         //      evaluated (as it seems)
-        cpptrace::print_trace();
+        StackTrace::generate();
         QMessageBox::information(
             nullptr,
             "Termination",
@@ -50,17 +51,17 @@ int main(int argc, char *argv[])
 
     std::cout << "First trace:" << std::endl;
     // This works
-    cpptrace::print_trace();
+    StackTrace::generate();
 
     try {
         ::willThrow();
     } catch (...) {
         std::cout << "Second trace (in excepton handler):" << std::endl;
         // This works as well
-        cpptrace::print_trace();
+        StackTrace::generate();
     }
 
-    ::willBreakMyPromiseNotToThrow();
+    MainWindow w;
 
     return 0;
 }

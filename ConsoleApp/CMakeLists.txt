@@ -6,7 +6,7 @@ add_executable(CpptraceConsoleTest
 target_link_libraries(
     CpptraceConsoleTest
     PRIVATE
-        cpptrace::cpptrace
+        StackTrace::StackTrace
 )
 set_target_properties(
     CpptraceConsoleTest
