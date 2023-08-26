@@ -31,5 +31,5 @@ set_target_properties(
     CpptraceTest
     PROPERTIES
         MACOSX_BUNDLE FALSE
-        WIN32_EXECUTABLE TRUE
+        WIN32_EXECUTABLE FALSE
 )
