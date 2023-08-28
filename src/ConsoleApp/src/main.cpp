@@ -21,9 +21,8 @@ namespace
         // BUG: This will cause a segmentation fault (on macOS) when run *outside* of a debugger
         //      (regardless of whether compiled as debug or release)
         //
-        //      When run *inside* a debugger then we get past this point (except that we won't
-        //      get neither source names nor line numbers - but frame addresses are properly
-        //      evaluated (as it seems)
+        // FIXED: This is fixed with cpptrace commit d72e30a ("path with white space") and
+        //         0977253 ("segmentation fault on macOS")
         StackTrace::generate();
         // Instead of std::abort we call exit with some error code, as we have gracefully dealt
         // with the uncaught exception (abnormal termination)
