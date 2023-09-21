@@ -3,7 +3,7 @@ include(FetchContent)
 FetchContent_Declare(
   cpptrace
   GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-  GIT_TAG        d72e30af12da31cf60a2cd0701e75b4fb1e80e86 # main 2023-08-28
+  GIT_TAG       v0.2.0-beta
 )
 FetchContent_MakeAvailable(cpptrace)
 add_library(cpptrace::cpptrace ALIAS cpptrace)
